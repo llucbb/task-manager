@@ -5,7 +5,6 @@ import com.celonis.challenge.exceptions.InternalException;
 import com.celonis.challenge.mapper.TaskMapper;
 import com.celonis.challenge.repositories.ProjectGenerationTaskRepository;
 import com.celonis.challenge.services.FileService;
-import com.celonis.challenge.services.TaskService;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -26,11 +25,10 @@ public class FileServiceImpl implements FileService {
 
   private final ProjectGenerationTaskRepository projectGenerationTaskRepository;
   private final TaskMapper taskMapper;
-  private final TaskService taskService;
 
   @Override
-  public ResponseEntity<FileSystemResource> getTaskResult(String taskId) {
-    ProjectGenerationTaskDTO projectGenerationTask = taskService.getTask(taskId);
+  public ResponseEntity<FileSystemResource> getTaskResult(
+      ProjectGenerationTaskDTO projectGenerationTask) {
     File inputFile = new File(projectGenerationTask.getStorageLocation());
 
     if (!inputFile.exists()) {
@@ -45,9 +43,9 @@ public class FileServiceImpl implements FileService {
   }
 
   @Override
-  public void storeResult(String taskId, URL url) throws IOException {
-    ProjectGenerationTaskDTO projectGenerationTask = taskService.getTask(taskId);
-    File outputFile = File.createTempFile(taskId, ".zip");
+  public void storeResult(ProjectGenerationTaskDTO projectGenerationTask, URL url)
+      throws IOException {
+    File outputFile = File.createTempFile(projectGenerationTask.getId(), ".zip");
     outputFile.deleteOnExit();
     projectGenerationTask.setStorageLocation(outputFile.getAbsolutePath());
     projectGenerationTaskRepository.save(taskMapper.map(projectGenerationTask));

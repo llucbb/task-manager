@@ -14,32 +14,28 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.InitializingBean;
-import org.springframework.context.ApplicationContext;
+import org.springframework.core.io.FileSystemResource;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
-public class TaskServiceImpl implements TaskService, InitializingBean {
+public class TaskServiceImpl implements TaskService {
 
-  private final ProjectGenerationTaskRepository projectGenerationTaskRepository;
   private final TaskMapper taskMapper;
-  private final ApplicationContext context;
-
-  private FileService fileService;
-
-  @Override
-  public void afterPropertiesSet() {
-    fileService = context.getBean(FileService.class);
-  }
+  private final FileService fileService;
+  private final ProjectGenerationTaskRepository projectGenerationTaskRepository;
 
   @Override
+  @Transactional(readOnly = true)
   public List<ProjectGenerationTaskDTO> listTasks() {
     return taskMapper.map(projectGenerationTaskRepository.findAll());
   }
 
   @Override
+  @Transactional
   public ProjectGenerationTaskDTO createTask(ProjectGenerationTaskDTO projectGenerationTask) {
     projectGenerationTask.setId(null);
     projectGenerationTask.setCreationDate(new Date());
@@ -48,6 +44,7 @@ public class TaskServiceImpl implements TaskService, InitializingBean {
   }
 
   @Override
+  @Transactional(readOnly = true)
   public ProjectGenerationTaskDTO getTask(String taskId) {
     Optional<ProjectGenerationTask> projectGenerationTask =
         projectGenerationTaskRepository.findById(taskId);
@@ -56,6 +53,7 @@ public class TaskServiceImpl implements TaskService, InitializingBean {
   }
 
   @Override
+  @Transactional
   public ProjectGenerationTaskDTO update(
       String taskId, ProjectGenerationTaskDTO projectGenerationTask) {
     ProjectGenerationTaskDTO existing = getTask(taskId);
@@ -65,6 +63,7 @@ public class TaskServiceImpl implements TaskService, InitializingBean {
   }
 
   @Override
+  @Transactional
   public void delete(String taskId) {
     try {
       projectGenerationTaskRepository.deleteById(taskId);
@@ -74,15 +73,24 @@ public class TaskServiceImpl implements TaskService, InitializingBean {
   }
 
   @Override
+  @Transactional
   public void executeTask(String taskId) {
+    ProjectGenerationTaskDTO projectGenerationTask = getTask(taskId);
     URL url = TaskServiceImpl.class.getResource("/challenge.zip");
     if (url == null) {
       throw new InternalException("Zip file not found");
     }
     try {
-      fileService.storeResult(taskId, url);
+      fileService.storeResult(projectGenerationTask, url);
     } catch (IOException e) {
       throw new InternalException(e);
     }
+  }
+
+  @Override
+  @Transactional
+  public ResponseEntity<FileSystemResource> getTaskResult(String taskId) {
+    ProjectGenerationTaskDTO projectGenerationTask = getTask(taskId);
+    return fileService.getTaskResult(projectGenerationTask);
   }
 }

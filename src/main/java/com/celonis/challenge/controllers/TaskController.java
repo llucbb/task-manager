@@ -1,7 +1,6 @@
 package com.celonis.challenge.controllers;
 
 import com.celonis.challenge.dto.ProjectGenerationTaskDTO;
-import com.celonis.challenge.services.FileService;
 import com.celonis.challenge.services.TaskService;
 import java.util.List;
 import javax.validation.Valid;
@@ -25,7 +24,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class TaskController {
 
   private final TaskService taskService;
-  private final FileService fileService;
 
   @GetMapping("/")
   public List<ProjectGenerationTaskDTO> listTasks() {
@@ -64,6 +62,6 @@ public class TaskController {
 
   @GetMapping("/{taskId}/result")
   public ResponseEntity<FileSystemResource> getResult(@PathVariable String taskId) {
-    return fileService.getTaskResult(taskId);
+    return taskService.getTaskResult(taskId);
   }
 }
