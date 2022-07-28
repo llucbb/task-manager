@@ -11,19 +11,21 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.URL;
 
 @Component
 public class FileService {
 
-    private final TaskService taskService;
+    private TaskService taskService;
 
     private final ProjectGenerationTaskRepository projectGenerationTaskRepository;
 
-    public FileService(TaskService taskService,
-                       ProjectGenerationTaskRepository projectGenerationTaskRepository) {
-        this.taskService = taskService;
+    public FileService(ProjectGenerationTaskRepository projectGenerationTaskRepository) {
         this.projectGenerationTaskRepository = projectGenerationTaskRepository;
     }
 
@@ -48,9 +50,12 @@ public class FileService {
         outputFile.deleteOnExit();
         projectGenerationTask.setStorageLocation(outputFile.getAbsolutePath());
         projectGenerationTaskRepository.save(projectGenerationTask);
-        try (InputStream is = url.openStream();
-             OutputStream os = new FileOutputStream(outputFile)) {
+        try (InputStream is = url.openStream(); OutputStream os = new FileOutputStream(outputFile)) {
             IOUtils.copy(is, os);
         }
+    }
+
+    public void setTaskService(TaskService taskService) {
+        this.taskService = taskService;
     }
 }
