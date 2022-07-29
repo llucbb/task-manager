@@ -23,7 +23,7 @@ public class CallableTask implements Callable<CounterTaskDTO> {
   }
 
   public void complete() {
-    log.info("Task execution has been completed successfully, id: {}", counterTask.getId());
+    log.info("Completed task {}", counterTask.getName());
     Thread.currentThread().interrupt();
   }
 
@@ -39,6 +39,7 @@ public class CallableTask implements Callable<CounterTaskDTO> {
       }
     }
     complete();
+    counterTask.setX(x.get());
     return counterTask;
   }
 }

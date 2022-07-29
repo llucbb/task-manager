@@ -11,7 +11,7 @@ import lombok.Setter;
 @AllArgsConstructor
 public class TaskStatusDTO {
 
+  private TaskDTO task;
   private Boolean executed;
-  private Boolean done;
-  private Boolean cancelled;
+  private Boolean completed;
 }

@@ -26,7 +26,6 @@ public class TaskServiceImpl implements TaskService {
   private final TaskRepository taskRepository;
 
   @Override
-  @Transactional
   public TaskDTO createTask(TaskDTO task) {
     task.setId(null);
     task.setCreationDate(new Date());
@@ -73,26 +72,26 @@ public class TaskServiceImpl implements TaskService {
   @Transactional
   public void executeTask(String taskId) {
     TaskDTO task = getTask(taskId);
-    taskExecutorServiceFactory.get(task.getTaskType().name()).executeTask(task);
+    taskExecutorServiceFactory.get(task.getType()).executeTask(task);
   }
 
   @Override
   @Transactional(readOnly = true)
   public TaskStatusDTO getTaskStatus(String taskId) {
     TaskDTO task = getTask(taskId);
-    return taskExecutorServiceFactory.get(task.getTaskType().name()).getTaskStatus(task);
+    return taskExecutorServiceFactory.get(task.getType()).getTaskStatus(task);
   }
 
   @Override
   @Transactional
   public TaskResultDTO<?> getTaskResult(String taskId) {
     TaskDTO task = getTask(taskId);
-    return taskExecutorServiceFactory.get(task.getTaskType().name()).getTaskResult(task);
+    return taskExecutorServiceFactory.get(task.getType()).getTaskResult(task);
   }
 
   @Override
   public void cancel(String taskId) {
     TaskDTO task = getTask(taskId);
-    taskExecutorServiceFactory.get(task.getTaskType().name()).cancelTask(task);
+    taskExecutorServiceFactory.get(task.getType()).cancelTask(task);
   }
 }

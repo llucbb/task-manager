@@ -1,11 +1,11 @@
 package com.celonis.challenge.dto;
 
-import com.celonis.challenge.enums.TaskType;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.util.StringUtils;
 
 @Getter
 @Setter
@@ -15,7 +15,7 @@ public class ProjectGenerationTaskDTO extends TaskDTO {
 
   @JsonIgnore private String storageLocation;
 
-  public TaskType getTaskType() {
-    return TaskType.PROJECT_GENERATION;
+  public boolean done() {
+    return StringUtils.hasText(storageLocation);
   }
 }

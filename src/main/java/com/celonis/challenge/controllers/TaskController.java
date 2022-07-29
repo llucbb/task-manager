@@ -32,19 +32,19 @@ public class TaskController {
     this.taskService = taskService;
   }
 
-  @PostMapping("/")
+  @PostMapping("/project-generation")
   public TaskDTO createTask(@RequestBody @Valid ProjectGenerationTaskDTO task) {
+    return taskService.createTask(task);
+  }
+
+  @PostMapping("/counter")
+  public TaskDTO createTask(@RequestBody @Valid CounterTaskDTO task) {
     return taskService.createTask(task);
   }
 
   @GetMapping("/")
   public List<TaskDTO> listTasks() {
     return taskService.listTasks();
-  }
-
-  @PostMapping("/counter")
-  public TaskDTO createTask(@RequestBody @Valid CounterTaskDTO task) {
-    return taskService.createTask(task);
   }
 
   @GetMapping("/{taskId}")

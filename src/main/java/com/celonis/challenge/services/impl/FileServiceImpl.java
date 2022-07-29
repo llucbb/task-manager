@@ -29,15 +29,14 @@ public class FileServiceImpl implements FileService {
   public void storeResult(TaskDTO task, URL url) throws IOException {
     File outputFile = File.createTempFile(task.getId(), ".zip");
     outputFile.deleteOnExit();
+
     ProjectGenerationTask projectGenerationTask =
         projectGenerationTaskRepository.findById(task.getId()).orElseThrow(NotFoundException::new);
     projectGenerationTask.setStorageLocation(outputFile.getAbsolutePath());
     projectGenerationTaskRepository.save(projectGenerationTask);
+
     try (InputStream is = url.openStream();
         OutputStream os = new FileOutputStream(outputFile)) {
-      // Java core has already a way (since Java9) to read all bytes from an input stream and write
-      // them into a
-      // given output stream.
       is.transferTo(os);
     }
   }

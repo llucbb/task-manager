@@ -2,7 +2,7 @@ package com.celonis.challenge.controllers;
 
 import com.celonis.challenge.exceptions.NotAuthorizedException;
 import com.celonis.challenge.exceptions.NotFoundException;
-import com.celonis.challenge.exceptions.TaskFailureException;
+import com.celonis.challenge.exceptions.TaskException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -28,11 +28,11 @@ public class ErrorController {
     return "Not authorized";
   }
 
-  @ResponseStatus(HttpStatus.NOT_FOUND)
-  @ExceptionHandler(TaskFailureException.class)
-  public String handleTaskFailure(TaskFailureException e) {
-    log.error("Task failure", e);
-    return "Task failure";
+  @ResponseStatus(HttpStatus.BAD_REQUEST)
+  @ExceptionHandler(TaskException.class)
+  public String handleTaskException(TaskException e) {
+    log.error("Task error", e);
+    return e.getMessage();
   }
 
   @ResponseStatus(HttpStatus.BAD_REQUEST)

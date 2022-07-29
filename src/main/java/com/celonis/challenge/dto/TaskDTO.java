@@ -1,8 +1,7 @@
 package com.celonis.challenge.dto;
 
-import com.celonis.challenge.enums.TaskType;
-import com.celonis.challenge.exceptions.InternalException;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.Date;
 import javax.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
@@ -14,7 +13,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class TaskDTO implements TaskTypified {
+public class TaskDTO {
 
   private String id;
 
@@ -23,8 +22,5 @@ public class TaskDTO implements TaskTypified {
   @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss z")
   private Date creationDate;
 
-  @Override
-  public TaskType getTaskType() {
-    throw new InternalException("Not implemented");
-  }
+  @JsonIgnore private String type;
 }
