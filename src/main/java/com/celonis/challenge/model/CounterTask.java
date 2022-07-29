@@ -7,7 +7,8 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-public class ProjectGenerationTask extends Task {
+public class CounterTask extends Task {
 
-  private String storageLocation;
+  private Integer x;
+  private Integer y;
 }

@@ -1,7 +1,7 @@
 package com.celonis.challenge.dto;
 
 import com.celonis.challenge.enums.TaskType;
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import javax.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -9,11 +9,17 @@ import lombok.Setter;
 
 @NoArgsConstructor
 @AllArgsConstructor
-public class ProjectGenerationTaskDTO extends TaskDTO {
+public class CounterTaskDTO extends TaskDTO {
 
-  @Getter @Setter @JsonIgnore private String storageLocation;
+  @Getter @Setter @NotNull private Integer x;
+
+  @Getter @Setter @NotNull private Integer y;
+
+  public void incrementX() {
+    x++;
+  }
 
   public TaskType getTaskType() {
-    return TaskType.PROJECT_GENERATION;
+    return TaskType.COUNTER;
   }
 }

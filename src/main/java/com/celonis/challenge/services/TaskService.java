@@ -1,23 +1,22 @@
 package com.celonis.challenge.services;
 
-import com.celonis.challenge.dto.ProjectGenerationTaskDTO;
+import com.celonis.challenge.dto.TaskDTO;
+import com.celonis.challenge.dto.TaskResultDTO;
 import java.util.List;
-import org.springframework.core.io.FileSystemResource;
-import org.springframework.http.ResponseEntity;
 
 public interface TaskService {
 
-  List<ProjectGenerationTaskDTO> listTasks();
+  List<TaskDTO> listTasks();
 
-  ProjectGenerationTaskDTO createTask(ProjectGenerationTaskDTO projectGenerationTask);
+  TaskDTO createTask(TaskDTO task);
 
-  ProjectGenerationTaskDTO getTask(String taskId);
+  TaskDTO getTask(String taskId);
 
-  ProjectGenerationTaskDTO update(String taskId, ProjectGenerationTaskDTO projectGenerationTask);
+  TaskDTO update(String taskId, TaskDTO task);
 
   void delete(String taskId);
 
   void executeTask(String taskId);
 
-  ResponseEntity<FileSystemResource> getTaskResult(String taskId);
+  TaskResultDTO<?> getTaskResult(String taskId);
 }
