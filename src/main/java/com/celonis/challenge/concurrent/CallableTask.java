@@ -22,9 +22,9 @@ public class CallableTask implements Callable<CounterTaskDTO> {
     this.counterDelayMs = counterDelayMs;
   }
 
-  public void stop() {
+  public void complete() {
+    log.info("Task execution has been completed successfully, id: {}", counterTask.getId());
     Thread.currentThread().interrupt();
-    log.info("Stopped task {}", counterTask.getName());
   }
 
   @Override
@@ -32,13 +32,13 @@ public class CallableTask implements Callable<CounterTaskDTO> {
     log.info("Started task {}", counterTask.getName());
     while (x.get() <= y) {
       log.info("x: {} at task {}", x.getAndIncrement(), counterTask.getName());
-        try {
-          Thread.sleep(counterDelayMs);
-        } catch (InterruptedException e) {
-          throw new InternalException(e);
-        }
+      try {
+        Thread.sleep(counterDelayMs);
+      } catch (InterruptedException e) {
+        throw new InternalException(e);
+      }
     }
-    stop();
+    complete();
     return counterTask;
   }
 }

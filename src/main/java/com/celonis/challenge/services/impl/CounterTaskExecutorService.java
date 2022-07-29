@@ -40,17 +40,16 @@ public class CounterTaskExecutorService implements TaskExecutorService {
 
           @Override
           public void onFailure(Throwable ex) {
-            throw new TaskFailureException("Error executing task", ex);
+            throw new TaskFailureException(ex);
           }
 
           @Override
           public void onSuccess(CounterTaskDTO counterTask) {
-            String taskId = removeTask(counterTask);
+            String taskId = removeTask(counterTask.getId());
             log.info("Success executing task, id:" + taskId);
           }
 
-          private String removeTask(CounterTaskDTO task) {
-            String taskId = task.getId();
+          private String removeTask(String taskId) {
             runningTasks.remove(taskId);
             counterTaskRepository.deleteById(taskId);
             return taskId;
@@ -64,9 +63,10 @@ public class CounterTaskExecutorService implements TaskExecutorService {
     String taskId = task.getId();
     ListenableFuture<CounterTaskDTO> future = runningTasks.get(taskId);
     if (future != null && !future.isCancelled() && !future.isDone()) {
-        future.cancel(false);
-        runningTasks.remove(taskId);
-        counterTaskRepository.deleteById(taskId);
+      future.cancel(true);
+      runningTasks.remove(taskId);
+      counterTaskRepository.deleteById(taskId);
+      log.info("Cancelled task, id:" + taskId);
     }
   }
 
