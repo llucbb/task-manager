@@ -13,13 +13,13 @@ public class CallableTask implements Callable<CounterTaskDTO> {
   @Getter private final AtomicInteger x;
   @Getter private final int y;
   @Getter private final CounterTaskDTO counterTask;
-  private final int counterDelayMs;
+  private final int delayMs;
 
-  public CallableTask(CounterTaskDTO counterTask, int counterDelayMs) {
+  public CallableTask(CounterTaskDTO counterTask, int delayMs) {
     x = new AtomicInteger(counterTask.getX());
     y = counterTask.getY();
     this.counterTask = counterTask;
-    this.counterDelayMs = counterDelayMs;
+    this.delayMs = delayMs;
   }
 
   public void complete() {
@@ -33,7 +33,7 @@ public class CallableTask implements Callable<CounterTaskDTO> {
     while (x.get() <= y) {
       log.info("x: {} at task {}", x.getAndIncrement(), counterTask.getName());
       try {
-        Thread.sleep(counterDelayMs);
+        Thread.sleep(delayMs);
       } catch (InterruptedException e) {
         throw new InternalException(e);
       }

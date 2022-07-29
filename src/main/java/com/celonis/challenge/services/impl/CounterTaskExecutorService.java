@@ -11,6 +11,7 @@ import com.celonis.challenge.repositories.CounterTaskRepository;
 import com.celonis.challenge.services.TaskExecutorService;
 import java.util.HashMap;
 import java.util.Map;
+import javax.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
@@ -24,7 +25,15 @@ import org.springframework.util.concurrent.ListenableFutureCallback;
 @Service("CounterTask")
 public class CounterTaskExecutorService implements TaskExecutorService {
 
-  private Map<String, ListenableFuture<CounterTaskDTO>> runningTasks = new HashMap<>();
+  private static final int COUNTER_DELAY_MS = 1000;
+
+  private Map<String, ListenableFuture<CounterTaskDTO>> submittedTasks;
+
+  @PostConstruct
+  public void init() {
+    submittedTasks = new HashMap<>();
+  }
+
   private final ThreadPoolTaskExecutor threadPoolTaskExecutor;
   private final CounterTaskRepository counterTaskRepository;
   private final TaskMapper taskMapper;
@@ -34,8 +43,10 @@ public class CounterTaskExecutorService implements TaskExecutorService {
   public void executeTask(TaskDTO task) {
     CounterTaskDTO counterTask = (CounterTaskDTO) task;
     validateExecution(counterTask);
-    ListenableFuture<CounterTaskDTO> future =
-        threadPoolTaskExecutor.submitListenable(new CallableTask(counterTask, 1000));
+
+    CallableTask callableTask = new CallableTask(counterTask, COUNTER_DELAY_MS);
+    ListenableFuture<CounterTaskDTO> future = threadPoolTaskExecutor.submitListenable(callableTask);
+
     future.addCallback(
         new ListenableFutureCallback<>() {
 
@@ -46,11 +57,12 @@ public class CounterTaskExecutorService implements TaskExecutorService {
 
           @Override
           public void onSuccess(CounterTaskDTO counterTask) {
-            runningTasks.remove(counterTask.getId());
+            submittedTasks.remove(counterTask.getId());
             counterTaskRepository.save(taskMapper.map(counterTask));
           }
         });
-    runningTasks.put(task.getId(), future);
+
+    submittedTasks.put(task.getId(), future);
   }
 
   private void validateExecution(CounterTaskDTO counterTask) {
@@ -67,10 +79,10 @@ public class CounterTaskExecutorService implements TaskExecutorService {
       throw new TaskException("Task has been completed and cannot be cancelled");
     }
     String taskId = counterTask.getId();
-    ListenableFuture<CounterTaskDTO> future = runningTasks.get(taskId);
+    ListenableFuture<CounterTaskDTO> future = submittedTasks.get(taskId);
     if (future != null && !future.isCancelled() && !future.isDone()) {
       future.cancel(true);
-      runningTasks.remove(taskId);
+      submittedTasks.remove(taskId);
       log.info("Cancelled task {}", task.getName());
     }
   }
@@ -78,7 +90,7 @@ public class CounterTaskExecutorService implements TaskExecutorService {
   @Override
   public TaskStatusDTO getTaskStatus(TaskDTO task) {
     CounterTaskDTO counterTask = (CounterTaskDTO) task;
-    ListenableFuture<CounterTaskDTO> future = runningTasks.get(counterTask.getId());
+    ListenableFuture<CounterTaskDTO> future = submittedTasks.get(counterTask.getId());
     if (future != null) {
       return new TaskStatusDTO(task, true, future.isDone());
     } else if (counterTask.done()) {
