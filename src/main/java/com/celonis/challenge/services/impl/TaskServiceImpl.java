@@ -69,21 +69,18 @@ public class TaskServiceImpl implements TaskService {
   }
 
   @Override
-  @Transactional
   public void executeTask(String taskId) {
     TaskDTO task = getTask(taskId);
     taskExecutorServiceFactory.get(task.getType()).executeTask(task);
   }
 
   @Override
-  @Transactional(readOnly = true)
   public TaskStatusDTO getTaskStatus(String taskId) {
     TaskDTO task = getTask(taskId);
     return taskExecutorServiceFactory.get(task.getType()).getTaskStatus(task);
   }
 
   @Override
-  @Transactional
   public TaskResultDTO<?> getTaskResult(String taskId) {
     TaskDTO task = getTask(taskId);
     return taskExecutorServiceFactory.get(task.getType()).getTaskResult(task);
