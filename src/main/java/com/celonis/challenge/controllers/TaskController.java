@@ -3,6 +3,7 @@ package com.celonis.challenge.controllers;
 import com.celonis.challenge.dto.CounterTaskDTO;
 import com.celonis.challenge.dto.ProjectGenerationTaskDTO;
 import com.celonis.challenge.dto.TaskDTO;
+import com.celonis.challenge.dto.TaskStatusDTO;
 import com.celonis.challenge.services.TaskService;
 import java.util.List;
 import javax.validation.Valid;
@@ -66,6 +67,17 @@ public class TaskController {
   @ResponseStatus(HttpStatus.NO_CONTENT)
   public void executeTask(@PathVariable String taskId) {
     taskService.executeTask(taskId);
+  }
+
+  @GetMapping("/{taskId}/status")
+  public TaskStatusDTO getTaskStatus(@PathVariable String taskId) {
+    return taskService.getTaskStatus(taskId);
+  }
+
+  @PutMapping("/{taskId}/cancel")
+  @ResponseStatus(HttpStatus.NO_CONTENT)
+  public void cancelTask(@PathVariable String taskId) {
+    taskService.cancel(taskId);
   }
 
   @GetMapping("/{taskId}/result")

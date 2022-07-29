@@ -1,6 +1,6 @@
 package com.celonis.challenge.config;
 
-import com.celonis.challenge.factory.TaskActionFactory;
+import com.celonis.challenge.factory.TaskExecutorServiceFactory;
 import org.springframework.beans.factory.config.ServiceLocatorFactoryBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -12,9 +12,9 @@ public class ApplicationConfig {
   private static final int CORES = Runtime.getRuntime().availableProcessors();
 
   @Bean("taskActionFactory")
-  public ServiceLocatorFactoryBean taskActionFactoryBean() {
+  public ServiceLocatorFactoryBean taskActionFactory() {
     ServiceLocatorFactoryBean factoryBean = new ServiceLocatorFactoryBean();
-    factoryBean.setServiceLocatorInterface(TaskActionFactory.class);
+    factoryBean.setServiceLocatorInterface(TaskExecutorServiceFactory.class);
     return factoryBean;
   }
 

@@ -2,6 +2,7 @@ package com.celonis.challenge.services;
 
 import com.celonis.challenge.dto.TaskDTO;
 import com.celonis.challenge.dto.TaskResultDTO;
+import com.celonis.challenge.dto.TaskStatusDTO;
 import java.util.List;
 
 public interface TaskService {
@@ -18,5 +19,9 @@ public interface TaskService {
 
   void executeTask(String taskId);
 
+  TaskStatusDTO getTaskStatus(String taskId);
+
   TaskResultDTO<?> getTaskResult(String taskId);
+
+  void cancel(String taskId);
 }
