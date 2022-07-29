@@ -7,17 +7,15 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class CounterTaskDTO extends TaskDTO {
 
-  @Getter @Setter @NotNull private Integer x;
+  @NotNull private Integer x;
 
-  @Getter @Setter @NotNull private Integer y;
-
-  public void incrementX() {
-    x++;
-  }
+  @NotNull private Integer y;
 
   public TaskType getTaskType() {
     return TaskType.COUNTER;

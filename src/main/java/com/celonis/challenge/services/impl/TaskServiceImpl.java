@@ -8,6 +8,7 @@ import com.celonis.challenge.mapper.TaskMapper;
 import com.celonis.challenge.model.Task;
 import com.celonis.challenge.repositories.TaskRepository;
 import com.celonis.challenge.services.TaskService;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -19,28 +20,30 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class TaskServiceImpl implements TaskService {
 
-  private final TaskMapper taskMapper;
-  private final TaskActionFactory taskActionFactory;
-  private final TaskRepository taskRepository;
+  private final TaskMapper mapper;
+  private final TaskActionFactory actionFactory;
+  private final TaskRepository repository;
 
   @Override
   @Transactional
   public TaskDTO createTask(TaskDTO task) {
-    return taskActionFactory.get(task.getTaskType().name()).createTask(task);
+    task.setId(null);
+    task.setCreationDate(new Date());
+    return mapper.map(repository.save(mapper.map(task)));
   }
 
   @Override
   @Transactional(readOnly = true)
   public List<TaskDTO> listTasks() {
-    return taskMapper.map(taskRepository.findAll());
+    return mapper.map(repository.findAll());
   }
 
   @Override
   @Transactional(readOnly = true)
   public TaskDTO getTask(String taskId) {
-    Optional<Task> task = taskRepository.findById(taskId);
+    Optional<Task> task = repository.findById(taskId);
 
-    return task.map(taskMapper::map).orElseThrow(NotFoundException::new);
+    return task.map(mapper::map).orElseThrow(NotFoundException::new);
   }
 
   @Override
@@ -49,14 +52,14 @@ public class TaskServiceImpl implements TaskService {
     TaskDTO existing = getTask(taskId);
     existing.setCreationDate(task.getCreationDate());
     existing.setName(task.getName());
-    return taskMapper.map(taskRepository.save(taskMapper.map(existing)));
+    return mapper.map(repository.save(mapper.map(existing)));
   }
 
   @Override
   @Transactional
   public void delete(String taskId) {
     try {
-      taskRepository.deleteById(taskId);
+      repository.deleteById(taskId);
     } catch (EmptyResultDataAccessException e) {
       throw new NotFoundException(e);
     }
@@ -66,13 +69,13 @@ public class TaskServiceImpl implements TaskService {
   @Transactional
   public void executeTask(String taskId) {
     TaskDTO task = getTask(taskId);
-    taskActionFactory.get(task.getTaskType().name()).executeTask(task);
+    actionFactory.get(task.getTaskType().name()).executeTask(task);
   }
 
   @Override
   @Transactional
   public TaskResultDTO<?> getTaskResult(String taskId) {
     TaskDTO task = getTask(taskId);
-    return taskActionFactory.get(task.getTaskType().name()).getTaskResult(task);
+    return actionFactory.get(task.getTaskType().name()).getTaskResult(task);
   }
 }
