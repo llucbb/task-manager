@@ -1,6 +1,7 @@
 package com.celonis.challenge.dto;
 
 import com.celonis.challenge.enums.TaskType;
+import com.celonis.challenge.exceptions.InternalException;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import java.util.Date;
 import javax.validation.constraints.NotBlank;
@@ -24,6 +25,6 @@ public class TaskDTO implements TaskTypified {
 
   @Override
   public TaskType getTaskType() {
-    throw null;
+    throw new InternalException("Not implemented");
   }
 }

@@ -7,11 +7,13 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class ProjectGenerationTaskDTO extends TaskDTO {
 
-  @Getter @Setter @JsonIgnore private String storageLocation;
+  @JsonIgnore private String storageLocation;
 
   public TaskType getTaskType() {
     return TaskType.PROJECT_GENERATION;
