@@ -3,13 +3,10 @@ package com.celonis.challenge.services.impl;
 import com.celonis.challenge.dto.TaskDTO;
 import com.celonis.challenge.dto.TaskResultDTO;
 import com.celonis.challenge.exceptions.NotFoundException;
+import com.celonis.challenge.factory.TaskActionFactory;
 import com.celonis.challenge.mapper.TaskMapper;
 import com.celonis.challenge.model.Task;
 import com.celonis.challenge.repositories.TaskRepository;
-import com.celonis.challenge.services.TaskCreationFactory;
-import com.celonis.challenge.services.TaskCreationService;
-import com.celonis.challenge.services.TaskExecutorFactory;
-import com.celonis.challenge.services.TaskExecutorService;
 import com.celonis.challenge.services.TaskService;
 import java.util.List;
 import java.util.Optional;
@@ -23,16 +20,13 @@ import org.springframework.transaction.annotation.Transactional;
 public class TaskServiceImpl implements TaskService {
 
   private final TaskMapper taskMapper;
-  private final TaskCreationFactory taskCreationFactory;
-  private final TaskExecutorFactory taskExecutorFactory;
+  private final TaskActionFactory taskActionFactory;
   private final TaskRepository taskRepository;
 
   @Override
   @Transactional
   public TaskDTO createTask(TaskDTO task) {
-    TaskCreationService taskCreationService =
-        taskCreationFactory.get(task.getTaskType().name() + "_CREATE");
-    return taskCreationService.createTask(task);
+    return taskActionFactory.get(task.getTaskType().name()).createTask(task);
   }
 
   @Override
@@ -72,17 +66,13 @@ public class TaskServiceImpl implements TaskService {
   @Transactional
   public void executeTask(String taskId) {
     TaskDTO task = getTask(taskId);
-    TaskExecutorService taskExecutorService =
-        taskExecutorFactory.get(task.getTaskType() + "_EXECUTE");
-    taskExecutorService.executeTask(task);
+    taskActionFactory.get(task.getTaskType().name()).executeTask(task);
   }
 
   @Override
   @Transactional
   public TaskResultDTO<?> getTaskResult(String taskId) {
     TaskDTO task = getTask(taskId);
-    TaskExecutorService taskExecutorService =
-        taskExecutorFactory.get(task.getTaskType() + "_EXECUTE");
-    return taskExecutorService.getTaskResult(task);
+    return taskActionFactory.get(task.getTaskType().name()).getTaskResult(task);
   }
 }

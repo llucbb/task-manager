@@ -13,7 +13,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public abstract class TaskDTO {
+public class TaskDTO implements TaskTypified {
 
   private String id;
 
@@ -22,5 +22,8 @@ public abstract class TaskDTO {
   @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss z")
   private Date creationDate;
 
-  public abstract TaskType getTaskType();
+  @Override
+  public TaskType getTaskType() {
+    throw null;
+  }
 }

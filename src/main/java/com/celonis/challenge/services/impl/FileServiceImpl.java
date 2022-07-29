@@ -22,7 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class FileServiceImpl implements FileService {
 
-  private final ProjectGenerationTaskRepository projectGenerationTaskRepository;
+  private final ProjectGenerationTaskRepository repository;
 
   @Override
   @Transactional
@@ -30,9 +30,9 @@ public class FileServiceImpl implements FileService {
     File outputFile = File.createTempFile(task.getId(), ".zip");
     outputFile.deleteOnExit();
     ProjectGenerationTask projectGenerationTask =
-        projectGenerationTaskRepository.findById(task.getId()).orElseThrow(NotFoundException::new);
+        repository.findById(task.getId()).orElseThrow(NotFoundException::new);
     projectGenerationTask.setStorageLocation(outputFile.getAbsolutePath());
-    projectGenerationTaskRepository.save(projectGenerationTask);
+    repository.save(projectGenerationTask);
     try (InputStream is = url.openStream();
         OutputStream os = new FileOutputStream(outputFile)) {
       // Java core has already a way (since Java9) to read all bytes from an input stream and write

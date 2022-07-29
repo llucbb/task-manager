@@ -1,7 +1,6 @@
 package com.celonis.challenge.config;
 
-import com.celonis.challenge.services.TaskCreationFactory;
-import com.celonis.challenge.services.TaskExecutorFactory;
+import com.celonis.challenge.factory.TaskActionFactory;
 import org.springframework.beans.factory.config.ServiceLocatorFactoryBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -10,17 +9,10 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 @Configuration
 public class ApplicationConfig {
 
-  @Bean("taskCreationFactory")
-  public ServiceLocatorFactoryBean taskCreationFactoryBean() {
+  @Bean("taskActionFactory")
+  public ServiceLocatorFactoryBean taskActionFactoryBean() {
     ServiceLocatorFactoryBean factoryBean = new ServiceLocatorFactoryBean();
-    factoryBean.setServiceLocatorInterface(TaskCreationFactory.class);
-    return factoryBean;
-  }
-
-  @Bean("taskExecutorFactory")
-  public ServiceLocatorFactoryBean taskExecutorFactoryBean() {
-    ServiceLocatorFactoryBean factoryBean = new ServiceLocatorFactoryBean();
-    factoryBean.setServiceLocatorInterface(TaskExecutorFactory.class);
+    factoryBean.setServiceLocatorInterface(TaskActionFactory.class);
     return factoryBean;
   }
 
