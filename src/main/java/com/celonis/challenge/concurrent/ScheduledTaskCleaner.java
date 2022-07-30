@@ -15,7 +15,9 @@ public class ScheduledTaskCleaner {
   // private static final String EVERY_5_MINUTES= "0 */5 * * * *";
   private final TaskService taskService;
 
+  // With a cron expression
   @Scheduled(cron = EVERY_SUNDAY_AT_3)
+  // Fixed rate in ms
   // @Scheduled(fixedRate = 60000)
   public void clean() {
     log.info("Started scheduled task cleaner");

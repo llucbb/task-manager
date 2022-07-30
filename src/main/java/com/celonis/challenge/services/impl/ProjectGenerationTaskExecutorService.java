@@ -19,7 +19,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
-
 @Service(PROJECT_GENERATION_TASK)
 @RequiredArgsConstructor
 public class ProjectGenerationTaskExecutorService implements TaskExecutorService {
@@ -50,7 +49,7 @@ public class ProjectGenerationTaskExecutorService implements TaskExecutorService
   }
 
   private URL validateInputAndGet() {
-    URL url = TaskServiceImpl.class.getResource(projectGenerationFile);
+    URL url = TaskServiceImpl.class.getResource("/" + projectGenerationFile);
     if (url == null) {
       throw new InternalException("Zip file not found");
     }

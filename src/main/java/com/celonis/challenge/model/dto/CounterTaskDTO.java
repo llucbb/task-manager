@@ -1,5 +1,6 @@
 package com.celonis.challenge.model.dto;
 
+import javax.validation.constraints.Max;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PositiveOrZero;
 import lombok.AllArgsConstructor;
@@ -18,10 +19,9 @@ public class CounterTaskDTO extends TaskDTO {
   @PositiveOrZero(message = "x can't be negative")
   private Integer x;
 
-  // As the task will take y - x seconds to complete we need to limit its maximum value to avoid
-  // memory
-  // problems
+  // Task will take y - x application.counter-delay ms to complete
+  // To avoid issues we need limit the maximum value allowed for y
   @NotNull(message = "y is mandatory")
-  // @Max(value = 120, message = "y can't be greater than 60")
+  @Max(value = 60, message = "y can't be greater than 60")
   private Integer y;
 }
