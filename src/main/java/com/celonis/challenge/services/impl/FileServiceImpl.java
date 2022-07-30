@@ -1,10 +1,10 @@
 package com.celonis.challenge.services.impl;
 
-import com.celonis.challenge.dto.ProjectGenerationTaskDTO;
-import com.celonis.challenge.dto.TaskDTO;
 import com.celonis.challenge.exceptions.InternalException;
 import com.celonis.challenge.exceptions.NotFoundException;
 import com.celonis.challenge.model.ProjectGenerationTask;
+import com.celonis.challenge.model.dto.ProjectGenerationTaskDTO;
+import com.celonis.challenge.model.dto.TaskDTO;
 import com.celonis.challenge.repositories.ProjectGenerationTaskRepository;
 import com.celonis.challenge.services.FileService;
 import java.io.File;

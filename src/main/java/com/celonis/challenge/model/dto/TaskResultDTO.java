@@ -1,4 +1,4 @@
-package com.celonis.challenge.dto;
+package com.celonis.challenge.model.dto;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

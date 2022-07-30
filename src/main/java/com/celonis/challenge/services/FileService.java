@@ -1,7 +1,7 @@
 package com.celonis.challenge.services;
 
-import com.celonis.challenge.dto.ProjectGenerationTaskDTO;
-import com.celonis.challenge.dto.TaskDTO;
+import com.celonis.challenge.model.dto.ProjectGenerationTaskDTO;
+import com.celonis.challenge.model.dto.TaskDTO;
 import java.io.IOException;
 import java.net.URL;
 import org.springframework.core.io.FileSystemResource;

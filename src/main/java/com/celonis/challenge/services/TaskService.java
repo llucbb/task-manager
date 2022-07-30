@@ -1,8 +1,8 @@
 package com.celonis.challenge.services;
 
-import com.celonis.challenge.dto.TaskDTO;
-import com.celonis.challenge.dto.TaskResultDTO;
-import com.celonis.challenge.dto.TaskStatusDTO;
+import com.celonis.challenge.model.dto.TaskDTO;
+import com.celonis.challenge.model.dto.TaskResultDTO;
+import com.celonis.challenge.model.dto.TaskStatusDTO;
 import java.util.List;
 
 public interface TaskService {
@@ -24,4 +24,6 @@ public interface TaskService {
   TaskResultDTO<?> getTaskResult(String taskId);
 
   void cancel(String taskId);
+
+  void deleteNonExecutedTasks();
 }

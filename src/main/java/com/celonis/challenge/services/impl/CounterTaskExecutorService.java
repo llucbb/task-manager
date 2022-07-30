@@ -1,17 +1,19 @@
 package com.celonis.challenge.services.impl;
 
 import com.celonis.challenge.concurrent.CallableTask;
-import com.celonis.challenge.dto.CounterTaskDTO;
-import com.celonis.challenge.dto.TaskDTO;
-import com.celonis.challenge.dto.TaskResultDTO;
-import com.celonis.challenge.dto.TaskStatusDTO;
+import com.celonis.challenge.config.AppConstants;
 import com.celonis.challenge.exceptions.TaskException;
 import com.celonis.challenge.mapper.TaskMapper;
+import com.celonis.challenge.model.dto.CounterTaskDTO;
+import com.celonis.challenge.model.dto.TaskDTO;
+import com.celonis.challenge.model.dto.TaskResultDTO;
+import com.celonis.challenge.model.dto.TaskStatusDTO;
 import com.celonis.challenge.repositories.CounterTaskRepository;
 import com.celonis.challenge.services.TaskExecutorService;
 import java.util.HashMap;
 import java.util.Map;
 import javax.annotation.PostConstruct;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
@@ -22,12 +24,12 @@ import org.springframework.util.concurrent.ListenableFutureCallback;
 
 @Slf4j
 @RequiredArgsConstructor
-@Service("CounterTask")
+@Service(AppConstants.COUNTER_TASK)
 public class CounterTaskExecutorService implements TaskExecutorService {
 
   private static final int COUNTER_DELAY_MS = 1000;
 
-  private Map<String, ListenableFuture<CounterTaskDTO>> submittedTasks;
+  @Getter private Map<String, ListenableFuture<CounterTaskDTO>> submittedTasks;
 
   @PostConstruct
   public void init() {
@@ -39,10 +41,18 @@ public class CounterTaskExecutorService implements TaskExecutorService {
   private final TaskMapper taskMapper;
 
   @Override
+  public boolean isCompleted(TaskDTO task) {
+    CounterTaskDTO counterTask = (CounterTaskDTO) task;
+    return counterTask.getX() >= counterTask.getY();
+  }
+
+  @Override
   @Transactional
   public void executeTask(TaskDTO task) {
     CounterTaskDTO counterTask = (CounterTaskDTO) task;
-    validateExecution(counterTask);
+    if (isCompleted(counterTask)) {
+      throw new TaskException("Task has been completed");
+    }
 
     CallableTask callableTask = new CallableTask(counterTask, COUNTER_DELAY_MS);
     ListenableFuture<CounterTaskDTO> future = threadPoolTaskExecutor.submitListenable(callableTask);
@@ -65,17 +75,11 @@ public class CounterTaskExecutorService implements TaskExecutorService {
     submittedTasks.put(task.getId(), future);
   }
 
-  private void validateExecution(CounterTaskDTO counterTask) {
-    if (counterTask.done()) {
-      throw new TaskException("Task has been completed");
-    }
-  }
-
   @Override
   @Transactional
   public void cancelTask(TaskDTO task) {
     CounterTaskDTO counterTask = (CounterTaskDTO) task;
-    if (counterTask.done()) {
+    if (isCompleted(counterTask)) {
       throw new TaskException("Task has been completed and cannot be cancelled");
     }
     String taskId = counterTask.getId();
@@ -93,7 +97,7 @@ public class CounterTaskExecutorService implements TaskExecutorService {
     ListenableFuture<CounterTaskDTO> future = submittedTasks.get(counterTask.getId());
     if (future != null) {
       return new TaskStatusDTO(task, true, future.isDone());
-    } else if (counterTask.done()) {
+    } else if (isCompleted(counterTask)) {
       return new TaskStatusDTO(task, true, true);
     } else {
       return new TaskStatusDTO(task, false, false);

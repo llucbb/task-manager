@@ -1,9 +1,9 @@
 package com.celonis.challenge.controllers;
 
-import com.celonis.challenge.dto.CounterTaskDTO;
-import com.celonis.challenge.dto.ProjectGenerationTaskDTO;
-import com.celonis.challenge.dto.TaskDTO;
-import com.celonis.challenge.dto.TaskStatusDTO;
+import com.celonis.challenge.model.dto.CounterTaskDTO;
+import com.celonis.challenge.model.dto.ProjectGenerationTaskDTO;
+import com.celonis.challenge.model.dto.TaskDTO;
+import com.celonis.challenge.model.dto.TaskStatusDTO;
 import com.celonis.challenge.services.TaskService;
 import java.util.List;
 import javax.validation.Valid;

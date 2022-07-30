@@ -1,7 +1,7 @@
 package com.celonis.challenge.concurrent;
 
-import com.celonis.challenge.dto.CounterTaskDTO;
 import com.celonis.challenge.exceptions.InternalException;
+import com.celonis.challenge.model.dto.CounterTaskDTO;
 import java.util.concurrent.Callable;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
