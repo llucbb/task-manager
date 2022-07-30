@@ -5,6 +5,7 @@ import com.celonis.challenge.exceptions.NotFoundException;
 import com.celonis.challenge.exceptions.TaskException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -39,7 +40,8 @@ public class ErrorController {
   @ExceptionHandler(MethodArgumentNotValidException.class)
   public String handleMethodArgumentNotValid(MethodArgumentNotValidException e) {
     log.error("Method argument not valid", e);
-    return "Method argument not valid";
+    FieldError fieldError = e.getFieldError();
+    return fieldError != null ? fieldError.getDefaultMessage() : "Method argument not valid";
   }
 
   @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)

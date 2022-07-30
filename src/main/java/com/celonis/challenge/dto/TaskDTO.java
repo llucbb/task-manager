@@ -17,7 +17,8 @@ public class TaskDTO {
 
   private String id;
 
-  @NotBlank private String name;
+  @NotBlank(message = "name is mandatory")
+  private String name;
 
   @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss z")
   private Date creationDate;

@@ -23,7 +23,7 @@ public class ApplicationConfig {
     ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
     executor.setCorePoolSize(CORES);
     executor.setMaxPoolSize(20);
-    executor.setThreadNamePrefix("task-executor");
+    executor.setThreadNamePrefix("counter-task-thread");
     executor.initialize();
     return executor;
   }
