@@ -24,8 +24,8 @@ import org.springframework.util.concurrent.ListenableFuture;
 import org.springframework.util.concurrent.ListenableFutureCallback;
 
 @Slf4j
-@RequiredArgsConstructor
 @Service(COUNTER_TASK)
+@RequiredArgsConstructor
 public class CounterTaskExecutorService implements TaskExecutorService {
 
   @Value("${application.counter-delay}")

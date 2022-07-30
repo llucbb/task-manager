@@ -19,8 +19,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
-@RequiredArgsConstructor
+
 @Service(PROJECT_GENERATION_TASK)
+@RequiredArgsConstructor
 public class ProjectGenerationTaskExecutorService implements TaskExecutorService {
 
   @Value("${application.project-generation-file}")
