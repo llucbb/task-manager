@@ -16,7 +16,7 @@ public class ScheduledTaskCleaner {
   private final TaskService taskService;
 
   @Scheduled(cron = EVERY_SUNDAY_AT_3)
-  //@Scheduled(fixedRate = 60000)
+  // @Scheduled(fixedRate = 60000)
   public void clean() {
     log.info("Started scheduled task cleaner");
     taskService.deleteNonExecutedTasks();
