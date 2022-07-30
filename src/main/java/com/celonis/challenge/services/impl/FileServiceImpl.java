@@ -27,24 +27,21 @@ public class FileServiceImpl implements FileService {
   @Override
   @Transactional
   public void storeResult(TaskDTO task, URL url) throws IOException {
+    ProjectGenerationTask projectGenerationTask =
+            projectGenerationTaskRepository.findById(task.getId()).orElseThrow(NotFoundException::new);
     File outputFile = File.createTempFile(task.getId(), ".zip");
     outputFile.deleteOnExit();
-
-    ProjectGenerationTask projectGenerationTask =
-        projectGenerationTaskRepository.findById(task.getId()).orElseThrow(NotFoundException::new);
-    projectGenerationTask.setStorageLocation(outputFile.getAbsolutePath());
-    projectGenerationTaskRepository.save(projectGenerationTask);
-
     try (InputStream is = url.openStream();
         OutputStream os = new FileOutputStream(outputFile)) {
       is.transferTo(os);
     }
+    projectGenerationTask.setStorageLocation(outputFile.getAbsolutePath());
+    projectGenerationTaskRepository.save(projectGenerationTask);
   }
 
   @Override
   public FileSystemResource getTaskResult(ProjectGenerationTaskDTO projectGenerationTask) {
     File inputFile = new File(projectGenerationTask.getStorageLocation());
-
     if (!inputFile.exists()) {
       throw new InternalException("File not generated yet");
     }
