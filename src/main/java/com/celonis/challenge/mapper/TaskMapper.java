@@ -1,5 +1,6 @@
 package com.celonis.challenge.mapper;
 
+import com.celonis.challenge.config.AppConstants;
 import com.celonis.challenge.exceptions.InternalException;
 import com.celonis.challenge.model.CounterTask;
 import com.celonis.challenge.model.ProjectGenerationTask;
@@ -15,15 +16,13 @@ import org.springframework.util.CollectionUtils;
 @Mapper(componentModel = "spring")
 public interface TaskMapper {
 
-  String UNEXPECTED_TASK_TYPE = "Unexpected task type";
-
   default TaskDTO map(Task task) {
     if (task instanceof ProjectGenerationTask) {
       return map((ProjectGenerationTask) task);
     } else if (task instanceof CounterTask) {
       return map((CounterTask) task);
     } else {
-      throw new InternalException(UNEXPECTED_TASK_TYPE);
+      throw new InternalException(AppConstants.UNEXPECTED_TASK_TYPE);
     }
   }
 
@@ -33,7 +32,7 @@ public interface TaskMapper {
     } else if (task instanceof CounterTaskDTO) {
       return map((CounterTaskDTO) task);
     } else {
-      throw new InternalException(UNEXPECTED_TASK_TYPE);
+      throw new InternalException(AppConstants.UNEXPECTED_TASK_TYPE);
     }
   }
 
