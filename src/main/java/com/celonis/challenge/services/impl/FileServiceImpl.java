@@ -28,7 +28,7 @@ public class FileServiceImpl implements FileService {
   @Transactional
   public void storeResult(TaskDTO task, URL url) throws IOException {
     ProjectGenerationTask projectGenerationTask =
-            projectGenerationTaskRepository.findById(task.getId()).orElseThrow(NotFoundException::new);
+        projectGenerationTaskRepository.findById(task.getId()).orElseThrow(NotFoundException::new);
     File outputFile = File.createTempFile(task.getId(), ".zip");
     outputFile.deleteOnExit();
     try (InputStream is = url.openStream();
