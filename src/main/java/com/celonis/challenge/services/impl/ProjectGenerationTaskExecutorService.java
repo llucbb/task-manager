@@ -1,6 +1,7 @@
 package com.celonis.challenge.services.impl;
 
-import com.celonis.challenge.config.AppConstants;
+import static com.celonis.challenge.config.AppConstants.PROJECT_GENERATION_TASK;
+
 import com.celonis.challenge.exceptions.InternalException;
 import com.celonis.challenge.exceptions.TaskException;
 import com.celonis.challenge.model.dto.ProjectGenerationTaskDTO;
@@ -19,7 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 @RequiredArgsConstructor
-@Service(AppConstants.PROJECT_GENERATION_TASK)
+@Service(PROJECT_GENERATION_TASK)
 public class ProjectGenerationTaskExecutorService implements TaskExecutorService {
 
   @Value("${application.project-generation-file}")

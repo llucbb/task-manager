@@ -1,7 +1,8 @@
 package com.celonis.challenge.services.impl;
 
+import static com.celonis.challenge.config.AppConstants.COUNTER_TASK;
+
 import com.celonis.challenge.concurrent.CallableTask;
-import com.celonis.challenge.config.AppConstants;
 import com.celonis.challenge.exceptions.TaskException;
 import com.celonis.challenge.mapper.TaskMapper;
 import com.celonis.challenge.model.dto.CounterTaskDTO;
@@ -24,7 +25,7 @@ import org.springframework.util.concurrent.ListenableFutureCallback;
 
 @Slf4j
 @RequiredArgsConstructor
-@Service(AppConstants.COUNTER_TASK)
+@Service(COUNTER_TASK)
 public class CounterTaskExecutorService implements TaskExecutorService {
 
   @Value("${application.counter-delay}")

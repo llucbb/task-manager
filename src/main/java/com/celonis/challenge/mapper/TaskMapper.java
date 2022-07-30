@@ -1,6 +1,7 @@
 package com.celonis.challenge.mapper;
 
-import com.celonis.challenge.config.AppConstants;
+import static com.celonis.challenge.config.AppConstants.*;
+
 import com.celonis.challenge.exceptions.InternalException;
 import com.celonis.challenge.model.CounterTask;
 import com.celonis.challenge.model.ProjectGenerationTask;
@@ -17,22 +18,22 @@ import org.springframework.util.CollectionUtils;
 public interface TaskMapper {
 
   default TaskDTO map(Task task) {
-    if (task instanceof ProjectGenerationTask) {
+    if (task.getType().equals(PROJECT_GENERATION_TASK)) {
       return map((ProjectGenerationTask) task);
-    } else if (task instanceof CounterTask) {
+    } else if (task.getType().equals(COUNTER_TASK)) {
       return map((CounterTask) task);
     } else {
-      throw new InternalException(AppConstants.UNEXPECTED_TASK_TYPE);
+      throw new InternalException(UNEXPECTED_TASK_TYPE);
     }
   }
 
   default Task map(TaskDTO task) {
-    if (task instanceof ProjectGenerationTaskDTO) {
+    if (task.getType().equals(PROJECT_GENERATION_TASK)) {
       return map((ProjectGenerationTaskDTO) task);
-    } else if (task instanceof CounterTaskDTO) {
+    } else if (task.getType().equals(COUNTER_TASK)) {
       return map((CounterTaskDTO) task);
     } else {
-      throw new InternalException(AppConstants.UNEXPECTED_TASK_TYPE);
+      throw new InternalException(UNEXPECTED_TASK_TYPE);
     }
   }
 
@@ -40,12 +41,12 @@ public interface TaskMapper {
     if (!CollectionUtils.isEmpty(tasks)) {
       List<TaskDTO> result =
           tasks.stream()
-              .filter(t -> t instanceof ProjectGenerationTask)
+              .filter(t -> t.getType().equals(PROJECT_GENERATION_TASK))
               .map(t -> map((ProjectGenerationTask) t))
               .collect(Collectors.toList());
       result.addAll(
           tasks.stream()
-              .filter(t -> t instanceof CounterTask)
+              .filter(t -> t.getType().equals(COUNTER_TASK))
               .map(t -> map((CounterTask) t))
               .collect(Collectors.toList()));
       return result;
