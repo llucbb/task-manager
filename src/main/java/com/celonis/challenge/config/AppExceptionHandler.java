@@ -1,4 +1,4 @@
-package com.celonis.challenge.controllers;
+package com.celonis.challenge.config;
 
 import com.celonis.challenge.exceptions.NotAuthorizedException;
 import com.celonis.challenge.exceptions.NotFoundException;
@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @Slf4j
 @RestControllerAdvice
-public class ErrorController {
+public class AppExceptionHandler {
 
   @ResponseStatus(HttpStatus.NOT_FOUND)
   @ExceptionHandler(NotFoundException.class)

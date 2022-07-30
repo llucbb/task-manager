@@ -7,6 +7,7 @@ import com.celonis.challenge.model.dto.TaskStatusDTO;
 import com.celonis.challenge.services.TaskService;
 import java.util.List;
 import javax.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -24,13 +25,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/tasks")
+@RequiredArgsConstructor
 public class TaskController {
 
   private final TaskService taskService;
-
-  public TaskController(TaskService taskService) {
-    this.taskService = taskService;
-  }
 
   @PostMapping("/project-generation")
   public TaskDTO createTask(@RequestBody @Valid ProjectGenerationTaskDTO task) {

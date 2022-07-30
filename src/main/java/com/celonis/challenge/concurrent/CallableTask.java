@@ -3,18 +3,17 @@ package com.celonis.challenge.concurrent;
 import com.celonis.challenge.exceptions.InternalException;
 import com.celonis.challenge.model.dto.CounterTaskDTO;
 import java.util.concurrent.Callable;
-import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class CallableTask implements Callable<CounterTaskDTO> {
 
-  @Getter private final CounterTaskDTO counterTask;
-  private final int delayMs;
+  private final CounterTaskDTO counterTask;
+  private final long delay;
 
-  public CallableTask(CounterTaskDTO counterTask, int delayMs) {
+  public CallableTask(CounterTaskDTO counterTask, long delay) {
     this.counterTask = counterTask;
-    this.delayMs = delayMs;
+    this.delay = delay;
   }
 
   @Override
@@ -27,7 +26,7 @@ public class CallableTask implements Callable<CounterTaskDTO> {
       x++;
       log.info("x: {} at task {}", x, taskName);
       try {
-        Thread.sleep(delayMs);
+        Thread.sleep(delay);
       } catch (InterruptedException e) {
         throw new InternalException(e);
       }

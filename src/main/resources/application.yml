@@ -1,0 +1,4 @@
+application:
+  counter-delay: 1000
+  days-to-keep-non-executed-tasks: 7
+  project-generation-file: /challenge.zip

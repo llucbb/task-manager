@@ -11,11 +11,11 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class ScheduledTaskCleaner {
 
+  private static final String EVERY_SUNDAY_AT_3 = "0 0 3 * * 7";
+  // private static final String EVERY_MINUTE= "0 */1 * * * *";
   private final TaskService taskService;
 
-  // every week '@weekly'
-  // every 5 minutes '0 */5 * * * *'
-  @Scheduled(cron = "0 */1 * * * *")
+  @Scheduled(cron = EVERY_SUNDAY_AT_3)
   public void clean() {
     log.info("Started scheduled task cleaner");
     taskService.deleteNonExecutedTasks();

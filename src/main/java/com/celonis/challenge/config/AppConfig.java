@@ -7,7 +7,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
 @Configuration
-public class ApplicationConfig {
+public class AppConfig {
 
   private static final int CORES = Runtime.getRuntime().availableProcessors();
 
@@ -23,7 +23,7 @@ public class ApplicationConfig {
     ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
     executor.setCorePoolSize(CORES);
     executor.setMaxPoolSize(20);
-    executor.setThreadNamePrefix("counter-task-thread");
+    executor.setThreadNamePrefix(AppConstants.COUNTER_TASK.toLowerCase());
     executor.initialize();
     return executor;
   }

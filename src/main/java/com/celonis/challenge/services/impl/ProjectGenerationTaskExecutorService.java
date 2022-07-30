@@ -12,6 +12,7 @@ import com.celonis.challenge.services.TaskExecutorService;
 import java.io.IOException;
 import java.net.URL;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,6 +21,9 @@ import org.springframework.util.StringUtils;
 @RequiredArgsConstructor
 @Service(AppConstants.PROJECT_GENERATION_TASK)
 public class ProjectGenerationTaskExecutorService implements TaskExecutorService {
+
+  @Value("${application.project-generation-file}")
+  private String projectGenerationFile;
 
   private final FileService fileService;
 
@@ -36,16 +40,15 @@ public class ProjectGenerationTaskExecutorService implements TaskExecutorService
     if (isCompleted(projectGenerationTask)) {
       throw new TaskException("Task has already been executed");
     }
-    URL url = validateInput();
     try {
-      fileService.storeResult(task, url);
+      fileService.storeResult(task, validateInputAndGet());
     } catch (IOException e) {
       throw new InternalException(e);
     }
   }
 
-  private URL validateInput() {
-    URL url = TaskServiceImpl.class.getResource("/challenge.zip");
+  private URL validateInputAndGet() {
+    URL url = TaskServiceImpl.class.getResource(projectGenerationFile);
     if (url == null) {
       throw new InternalException("Zip file not found");
     }

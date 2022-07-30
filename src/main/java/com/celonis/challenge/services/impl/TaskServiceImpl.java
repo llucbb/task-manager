@@ -19,6 +19,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,8 +31,9 @@ import org.springframework.util.CollectionUtils;
 public class TaskServiceImpl implements TaskService {
 
   private static final ZoneId UTC = ZoneId.of("UTC");
-  // One week
-  private static final int DAYS_TO_KEEP_NON_EXECUTED_TASKS = 1;
+
+  @Value("${application.days-to-keep-non-executed-tasks}")
+  private int daysToKeepNonExecutedTasks;
 
   private final TaskMapper taskMapper;
   private final TaskExecutorServiceFactory taskExecutorServiceFactory;
@@ -107,22 +109,20 @@ public class TaskServiceImpl implements TaskService {
   @Override
   @Transactional
   public void deleteNonExecutedTasks() {
-    LocalDateTime referenceDate =
-        LocalDateTime.now(UTC).minusMinutes(DAYS_TO_KEEP_NON_EXECUTED_TASKS);
+    LocalDateTime referenceDate = LocalDateTime.now(UTC).minusDays(daysToKeepNonExecutedTasks);
     // Get tasks created before the reference date
-    List<Task> createdBeforeReferenceDateTasks =
+    List<Task> tasksCreatedBeforeReferenceDate =
         taskRepository.findByCreationDateLessThan(Date.from(referenceDate.atZone(UTC).toInstant()));
 
     Set<String> tasksIdsToDelete =
-        createdBeforeReferenceDateTasks.stream()
+        tasksCreatedBeforeReferenceDate.stream()
             .filter(this::isNotExecutedOrCompleted)
             .map(Task::getId)
             .collect(Collectors.toSet());
     if (!CollectionUtils.isEmpty(tasksIdsToDelete)) {
       // Delete all tasks by ids in batch
       taskRepository.deleteAllByIdInBatch(tasksIdsToDelete);
-      log.info(
-          "Task clean service has deleted the following non executed tasks: " + tasksIdsToDelete);
+      log.info("Deleted the following non executed tasks: " + tasksIdsToDelete);
     }
   }
 
