@@ -11,7 +11,7 @@ public class ApplicationConfig {
 
   private static final int CORES = Runtime.getRuntime().availableProcessors();
 
-  @Bean("taskActionFactory")
+  @Bean
   public ServiceLocatorFactoryBean taskActionFactory() {
     ServiceLocatorFactoryBean factoryBean = new ServiceLocatorFactoryBean();
     factoryBean.setServiceLocatorInterface(TaskExecutorServiceFactory.class);
