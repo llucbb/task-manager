@@ -1,4 +1,4 @@
-# Celonis Programming Challenge
+# Programming Challenge
 
 Dear applicant,
 
