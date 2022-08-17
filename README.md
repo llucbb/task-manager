@@ -1,9 +1,5 @@
 # Programming Challenge
 
-Dear applicant,
-
-Congratulations, you made it to the Celonis Programming Challenge!
-
 Note that, although you are welcome to spend as long as you feel appropriate on your solution, this assignment usually takes a minimum of 3 hours.
 
 We will be happy to discuss any problems and ideas during the Challenge Interview.
